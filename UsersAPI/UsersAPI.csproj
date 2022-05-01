@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>0c65a9fa-d984-425e-b1c5-732b83db64cc</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Azure.Identity" Version="1.6.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.17.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\UsersAPI.Application\UsersAPI.Application.csproj" />
+    <ProjectReference Include="..\UsersAPI.Business\UsersAPI.Business.csproj" />
+    <ProjectReference Include="..\UsersAPI.Domain\UsersAPI.Domain.csproj" />
+    <ProjectReference Include="..\UsersAPI.Provider\UsersAPI.Provider.csproj" />
+  </ItemGroup>
+
+</Project>
