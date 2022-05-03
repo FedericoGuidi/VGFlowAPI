@@ -27,7 +27,8 @@ namespace UsersAPI.Business
 
             profile.Name = user.Name;
             profile.Description = user.Description;
-            
+            profile.Social = user.Social;
+
             Backlog backlog = new();
             backlog.TotalHours = user.VideoGames?.Sum(x => x.Hours) ?? 0;
             backlog.TotalGames = user.VideoGames?.Count ?? 0;
@@ -52,9 +53,13 @@ namespace UsersAPI.Business
             
             // Dettagli relativi ai rating di tutti gli utenti
             List<Rating> ratings = await _ratingRepository.RetrieveManyAsync(videogameId);
-            
-            var hours = user.VideoGames?.FirstOrDefault(x => x.Id == videogameId)?.Hours;
-            var status = user.VideoGames?.FirstOrDefault(x => x.Id == videogameId)?.Status;
+
+            var videogame = user.VideoGames?.FirstOrDefault(x => x.Id == videogameId);
+
+            var hours = videogame?.Hours;
+            var status = videogame?.Status;
+            var nowPlaying = videogame?.NowPlaying;
+            var starred = videogame?.Starred;
             var ratingsCount = ratings.Count;
             var gameRatings = ratings.Select(x => x.GameRating);
 
@@ -78,6 +83,8 @@ namespace UsersAPI.Business
             {
                 Hours = hours ?? 0,
                 Status = status,
+                NowPlaying = nowPlaying ?? false,
+                Starred = starred ?? false,
                 StarRating = userRating.StarRating,
                 GameRating = userRating.GameRating,
                 AverageStarRating = averageStarRating,

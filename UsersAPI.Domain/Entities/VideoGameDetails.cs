@@ -10,6 +10,8 @@ namespace UsersAPI.Domain.Entities
     {
         public int Hours { get; set; }
         public Status? Status { get; set; }
+        public bool NowPlaying { get; set; }
+        public bool Starred { get; set; }
         public double? StarRating { get; set; }
         public double? AverageStarRating { get; set; }
         public GameRating? GameRating { get; set; }

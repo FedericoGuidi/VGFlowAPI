@@ -10,6 +10,7 @@ namespace UsersAPI.Domain.Entities
     {
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
+        public List<Social>? Social { get; set; }
         public Backlog Backlog { get; set; } = new Backlog();
         public List<VideoGameCard>? NowPlaying { get; set; }
         public List<VideoGameCard>? Favorites { get; set; }

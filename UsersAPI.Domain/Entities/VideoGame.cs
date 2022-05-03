@@ -47,6 +47,7 @@ namespace UsersAPI.Domain.Entities
         Unfinished,
         Finished,
         Completed,
+        Unlimited,
         Abandoned
     }
 }
