@@ -38,7 +38,7 @@ namespace VideoGamesAPI.Business
                 Method = HttpMethod.Post,
                 RequestUri = new Uri("https://api.igdb.com/v4/games"),
                 Content = new StringContent($"fields id," +
-                    $"name,first_release_date,cover.image_id,summary,storyline,screenshots.*,platforms.*,platforms.platform_logo.*," +
+                    $"name,first_release_date,cover.image_id,summary,storyline,screenshots.*,platforms.*,platforms.platform_logo.*,genres.*," +
                     $"involved_companies.company.name," +
                     $"involved_companies.publisher," +
                     $"involved_companies.developer," +

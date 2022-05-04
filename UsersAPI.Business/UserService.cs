@@ -39,8 +39,8 @@ namespace UsersAPI.Business
 
             profile.Backlog = backlog;
 
-            profile.NowPlaying = user.VideoGames?.Where(x => x.NowPlaying).Select(x => MapFrom(x)).ToList();
-            profile.Favorites = user.VideoGames?.Where(x => x.Starred).Select(x => MapFrom(x)).ToList();
+            profile.NowPlaying = user.VideoGames?.Where(x => x.NowPlaying).OrderByDescending(x => x.UpdatedAt).Select(x => MapFrom(x)).ToList();
+            profile.Favorites = user.VideoGames?.Where(x => x.Starred).OrderByDescending(x => x.UpdatedAt).Select(x => MapFrom(x)).ToList();
 
             return profile;
         }

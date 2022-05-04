@@ -65,5 +65,7 @@ namespace VideoGamesAPI.Business.Models
         public List<Screenshot> Screenshots { get; set; }
         [JsonPropertyName("platforms")]
         public new List<Platform> Platforms { get; set; }
+        [JsonPropertyName("genres")]
+        public new List<Genre> Genres { get; set; }
     }
 }
