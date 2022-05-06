@@ -32,7 +32,9 @@ namespace VideoGamesAPI.Business.Models
             }
         }
         private Cover _Cover;
-
+        [JsonPropertyOrder(-2)]
+        [JsonPropertyName("summary")]
+        public string Summary { get; set; } = string.Empty;
         [JsonPropertyName("first_release_date")]
         public int UnixReleaseDate { get; set; }
         [JsonPropertyOrder(-2)]
@@ -53,8 +55,6 @@ namespace VideoGamesAPI.Business.Models
 
     public class VideoGame : VideoGameLite
     {
-        [JsonPropertyName("summary")]
-        public string Summary { get; set; } = string.Empty;
         [JsonPropertyName("storyline")]
         public string Storyline { get; set; } = string.Empty;
         [JsonPropertyName("involved_companies")]

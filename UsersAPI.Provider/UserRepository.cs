@@ -60,5 +60,21 @@ namespace UsersAPI.Provider
                 return false;
             }
         }
+
+        public async Task<bool> DeleteVideoGame(int id, string userId)
+        {
+            try
+            {
+                var collection = _database.GetCollection<User>("users");
+                var filter = Builders<User>.Filter.Where(x => x.AppleId == userId);
+                var update = Builders<User>.Update.PullFilter(x => x.VideoGames, Builders<VideoGame>.Filter.Where(v => v.Id == id));
+                await collection.UpdateOneAsync(filter, update);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
     }
 }

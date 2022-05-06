@@ -51,5 +51,22 @@ namespace VideoGamesAPI.Business
             var jsonResponse = await response.Content.ReadAsStringAsync();
             return JsonSerializer.Deserialize<List<VideoGame>>(jsonResponse).FirstOrDefault();
         }
+
+        public async Task<IEnumerable<VideoGameLite>> GetUpcomingGames()
+        {
+            long dateUnix = DateTimeOffset.Now.ToUnixTimeSeconds();
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Post,
+                RequestUri = new Uri("https://api.igdb.com/v4/games"),
+                Content = new StringContent($"fields id,name,cover.image_id,first_release_date,platforms.abbreviation,summary;" +
+                    $"where first_release_date > {dateUnix} & category = 0 & version_parent = null & hypes > 1;" +
+                    $"sort first_release_date asc;limit 50;", Encoding.UTF8, MediaTypeNames.Application.Json),
+            };
+
+            var response = await HttpClient.SendAsync(request);
+            var jsonResponse = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<List<VideoGameLite>>(jsonResponse);
+        }
     }
 }

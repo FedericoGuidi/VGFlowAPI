@@ -142,6 +142,22 @@
         "AuthenticationProviderKey": "AppleID",
         "AllowedScopes": []
       }
+    },
+    {
+      "DownstreamPathTemplate": "/api/videogames/upcoming",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "vgflow-videogamesapi.azurewebsites.net",
+          "Port": 443
+        }
+      ],
+      "UpstreamPathTemplate": "/videogames/upcoming",
+      "UpstreamHttpMethod": [ "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "AppleID",
+        "AllowedScopes": []
+      }
     }
   ],
   "GlobalConfiguration": {

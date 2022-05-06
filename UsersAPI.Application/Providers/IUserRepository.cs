@@ -11,5 +11,6 @@ namespace UsersAPI.Application.Providers
     {
         public Task<User> RetrieveAsync(string id);
         public Task<bool> InsertUpdateVideoGame(string userId, VideoGame videoGame);
+        public Task<bool> DeleteVideoGame(int id, string userId);
     }
 }

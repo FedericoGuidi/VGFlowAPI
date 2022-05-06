@@ -14,5 +14,6 @@ namespace UsersAPI.Application.Business
         public Task<Profile> RetrieveProfileAsync(string id);
         public Task<VideoGameDetails> RetrieveVideoGameDetailsAsync(int videoGameId, string userId);
         public Task<bool> InsertUpdateVideoGame(BacklogEntry backlogEntry);
+        public Task<bool> DeleteVideoGame(int id, string userId);
     }
 }

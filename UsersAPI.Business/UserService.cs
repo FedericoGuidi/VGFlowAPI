@@ -110,6 +110,11 @@ namespace UsersAPI.Business
             return await _userRepository.InsertUpdateVideoGame(backlogEntry.User, videoGame);
         }
 
+        public async Task<bool> DeleteVideoGame(int id, string userId)
+        {
+            return await _userRepository.DeleteVideoGame(id, userId);
+        }
+
         private VideoGameCard MapFrom(VideoGame videogame)
         {
             return new VideoGameCard()

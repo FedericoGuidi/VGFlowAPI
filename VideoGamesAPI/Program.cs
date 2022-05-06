@@ -36,4 +36,10 @@ app.MapGet("/api/videogames/search", async (string search, VideoGamesService vg)
 })
 .WithName("SearchVideoGames");
 
+app.MapGet("/api/videogames/upcoming", async (VideoGamesService vg) =>
+{
+    return await vg.GetUpcomingGames();
+})
+.WithName("UpcomingGames");
+
 app.Run();

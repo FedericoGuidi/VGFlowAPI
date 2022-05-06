@@ -96,6 +96,14 @@ namespace UsersAPI.Controllers
             return NoContent();
         }
 
+        [HttpDelete]
+        [Route("videogame/removeentry")]
+        public async Task<ActionResult> RemoveVideoGameEntry(int id, string userId)
+        {
+            await _userService.DeleteVideoGame(id, userId);
+            return NoContent();
+        }
+
         [HttpPost]
         [Route("login")]
         public async Task<Token> Login(string ac)
