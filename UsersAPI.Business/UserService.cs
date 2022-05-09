@@ -8,11 +8,9 @@ namespace UsersAPI.Business
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
-        private readonly IRatingRepository _ratingRepository;
-        public UserService(IUserRepository userRepository, IRatingRepository ratingRepository)
+        public UserService(IUserRepository userRepository)
         {
             _userRepository = userRepository;
-            _ratingRepository = ratingRepository;
         }
 
         public async Task<User> RetrieveAsync(string id)
@@ -48,36 +46,18 @@ namespace UsersAPI.Business
         public async Task<VideoGameDetails> RetrieveVideoGameDetailsAsync(int videogameId, string userId)
         {
             // Dettagli relativi all'utente
-            Rating userRating = userRating = await _ratingRepository.RetrieveAsync(videogameId, userId);
             User user = await _userRepository.RetrieveAsync(userId);
-            
-            // Dettagli relativi ai rating di tutti gli utenti
-            List<Rating> ratings = await _ratingRepository.RetrieveManyAsync(videogameId);
 
+            Rating averageRating = await _userRepository.RetrieveAverageRating(videogameId);
+           
             var videogame = user.VideoGames?.FirstOrDefault(x => x.Id == videogameId);
 
             var hours = videogame?.Hours;
             var status = videogame?.Status;
             var nowPlaying = videogame?.NowPlaying;
             var starred = videogame?.Starred;
-            var ratingsCount = ratings.Count;
-            var gameRatings = ratings.Select(x => x.GameRating);
-
-            GameRating averageGameRating = gameRatings.Any() ? gameRatings.GroupBy(gameRatings => 1)
-                .Select(r => new GameRating()
-                {
-                    Gameplay = r.Sum(x => x!.Gameplay) / ratingsCount,
-                    Plot = r.Sum(x => x!.Plot) / ratingsCount,
-                    Music = r.Sum(x => x!.Music) / ratingsCount,
-                    Graphics = r.Sum(x => x!.Graphics) / ratingsCount,
-                    LevelDesign = r.Sum(x => x!.LevelDesign) / ratingsCount,
-                    Longevity = r.Sum(x => x!.Longevity) / ratingsCount,
-                    IA = r.Sum(x => x!.IA) / ratingsCount,
-                    Physics = r.Sum(x => x!.Physics) / ratingsCount
-                })
-                .Single() : new GameRating();
-
-            double? averageStarRating = ratings.Any() ? ratings.Sum(x => x.StarRating ?? 0) / ratingsCount : null;
+            var starRating = videogame?.StarRating;
+            var gameRating = videogame?.GameRating;
 
             VideoGameDetails videoGameDetails = new()
             {
@@ -85,10 +65,10 @@ namespace UsersAPI.Business
                 Status = status,
                 NowPlaying = nowPlaying ?? false,
                 Starred = starred ?? false,
-                StarRating = userRating.StarRating,
-                GameRating = userRating.GameRating,
-                AverageStarRating = averageStarRating,
-                AverageGameRating = averageGameRating
+                StarRating = starRating,
+                GameRating = gameRating,
+                AverageStarRating = averageRating?.StarRating,
+                AverageGameRating = averageRating?.GameRating,
             };
             return videoGameDetails;
         }
@@ -115,6 +95,35 @@ namespace UsersAPI.Business
             return await _userRepository.DeleteVideoGame(id, userId);
         }
 
+        public async Task<bool> RateByStars(StarRating rating)
+        {
+            return await _userRepository.UpdateStarRating(rating.VideoGameId, rating.User, rating.Stars);
+        }
+
+        public async Task<bool> RateByGameRating(UserGameRating rating)
+        {
+            GameRating gameRating = new()
+            {
+                Gameplay = rating.Gameplay,
+                Plot = rating.Plot,
+                Music = rating.Music,
+                Graphics = rating.Graphics,
+                LevelDesign = rating.LevelDesign,
+                Longevity = rating.Longevity,
+                IA = rating.IA,
+                Physics = rating.Physics
+            };
+
+            return await _userRepository.UpdateGameRating(rating.VideoGameId, rating.User, gameRating);
+        }
+
+        public async Task<IEnumerable<TrendingVideoGame>> RetrieveTrendingVideoGames()
+        {
+            TrendingVideoGame tvg = new();
+
+            return new List<TrendingVideoGame> { tvg };
+        }
+
         private VideoGameCard MapFrom(VideoGame videogame)
         {
             return new VideoGameCard()
@@ -124,5 +133,7 @@ namespace UsersAPI.Business
                 Cover = videogame.Cover
             };
         }
+
+        
     }
 }

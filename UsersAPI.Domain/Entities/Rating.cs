@@ -12,8 +12,6 @@ namespace UsersAPI.Domain.Entities
     {
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; } = string.Empty;
-        [BsonElement("user")]
-        public string User { get; set; } = string.Empty;
         [BsonElement("videogame")]
         public int VideoGame { get; set; }
         [BsonElement("star_rating")]

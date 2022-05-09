@@ -13,7 +13,6 @@ namespace UsersAPI.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
-        private readonly IRatingService _ratingService;
         private readonly IConfiguration _configuration;
         private readonly IWebHostEnvironment _environment;
         private readonly string TeamID;
@@ -21,10 +20,9 @@ namespace UsersAPI.Controllers
         private readonly string KeyID;
         private readonly string SignatureKey;
 
-        public UserController(IUserService userService, IRatingService ratingService, IConfiguration configuration, IWebHostEnvironment environment)
+        public UserController(IUserService userService, IConfiguration configuration, IWebHostEnvironment environment)
         {
             _userService = userService;
-            _ratingService = ratingService;
             _configuration = configuration;
             _environment = environment;
 
@@ -76,7 +74,7 @@ namespace UsersAPI.Controllers
         [Route("videogame/rateByStars")]
         public async Task<ActionResult> RateVideogameByStars(StarRating rating)
         {
-            await _ratingService.RateByStars(rating);
+            await _userService.RateByStars(rating);
             return NoContent();
         }
 
@@ -84,7 +82,7 @@ namespace UsersAPI.Controllers
         [Route("videogame/rateByGameRating")]
         public async Task<ActionResult> RateVideogameByGameRating(UserGameRating rating)
         {
-            await _ratingService.RateByGameRating(rating);
+            await _userService.RateByGameRating(rating);
             return NoContent();
         }
 
@@ -102,6 +100,14 @@ namespace UsersAPI.Controllers
         {
             await _userService.DeleteVideoGame(id, userId);
             return NoContent();
+        }
+
+        [HttpGet]
+        [Route("videogames/trending")]
+        public async Task<ActionResult<IEnumerable<TrendingVideoGame>>> GetTrendingVideoGames()
+        {
+            IEnumerable<TrendingVideoGame> trendingVideoGames = await _userService.RetrieveTrendingVideoGames();
+            return Ok(trendingVideoGames);
         }
 
         [HttpPost]

@@ -15,9 +15,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IRatingService, RatingService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IRatingRepository, RatingRepository>();
 builder.Services.AddControllers().AddJsonOptions(options => { options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); });
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 

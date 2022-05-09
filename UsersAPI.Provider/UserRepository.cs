@@ -76,5 +76,126 @@ namespace UsersAPI.Provider
                 return false;
             }
         }
+
+        public async Task<Rating> RetrieveAverageRating(int videoGameId)
+        {
+            PipelineDefinition<User, Rating> pipeline = new[]
+            {
+                new BsonDocument("$unwind",
+                new BsonDocument("path", "$videogames")),
+                new BsonDocument("$match",new BsonDocument
+                    {
+                        { "videogames.id", videoGameId },
+                        { "videogames.star_rating",
+                new BsonDocument
+                        {
+                            { "$exists", true },
+                            { "$ne", BsonNull.Value }
+                        } },
+                        { "videogames.game_rating",
+                new BsonDocument
+                        {
+                            { "$exists", true },
+                            { "$ne", BsonNull.Value }
+                        } }
+                    }),
+                new BsonDocument("$group",
+                new BsonDocument
+                    {
+                        { "_id", "$videogames.id" },
+                        { "star_rating",
+                new BsonDocument("$avg",
+                new BsonDocument("$sum", "$videogames.star_rating")) },
+                        { "gameplay",
+                new BsonDocument("$avg",
+                new BsonDocument("$sum", "$videogames.game_rating.gameplay")) },
+                        { "plot",
+                new BsonDocument("$avg",
+                new BsonDocument("$sum", "$videogames.game_rating.plot")) },
+                        { "music",
+                new BsonDocument("$avg",
+                new BsonDocument("$sum", "$videogames.game_rating.music")) },
+                        { "graphics",
+                new BsonDocument("$avg",
+                new BsonDocument("$sum", "$videogames.game_rating.graphics")) },
+                        { "level_design",
+                new BsonDocument("$avg",
+                new BsonDocument("$sum", "$videogames.game_rating.level_design")) },
+                        { "longevity",
+                new BsonDocument("$avg",
+                new BsonDocument("$sum", "$videogames.game_rating.longevity")) },
+                        { "ia",
+                new BsonDocument("$avg",
+                new BsonDocument("$sum", "$videogames.game_rating.ia")) },
+                        { "physics",
+                new BsonDocument("$avg",
+                new BsonDocument("$sum", "$videogames.game_rating.physics")) }
+                    }),
+                new BsonDocument("$project",
+                new BsonDocument
+                    {
+                        { "_id", 0 },
+                        { "videogame", "$_id" },
+                        { "star_rating", "$star_rating" },
+                        { "game_rating",
+                new BsonDocument
+                        {
+                            { "gameplay", "$gameplay" },
+                            { "plot", "$plot" },
+                            { "music", "$music" },
+                            { "graphics", "$graphics" },
+                            { "level_design", "$level_design" },
+                            { "longevity", "$longevity" },
+                            { "ia", "$ia" },
+                            { "physics", "$physics" }
+                        } }
+                    })
+            };
+
+            var cursor = await _database.GetCollection<User>("users").AggregateAsync(pipeline);
+            var listResult = await cursor.ToListAsync();
+            
+            return listResult.Any() ? listResult.First() : new Rating();
+        }
+
+        public async Task<bool> UpdateStarRating(int videoGameId, string userId, double stars)
+        {
+            try
+            {
+                var collection = _database.GetCollection<User>("users");
+                var filter = Builders<User>.Filter.Eq(x => x.AppleId, userId)
+                    & Builders<User>.Filter.ElemMatch(x => x.VideoGames, Builders<VideoGame>.Filter.Eq(x => x.Id, videoGameId));
+
+                var update = Builders<User>.Update.Set(x => x.VideoGames![-1].StarRating, stars);
+
+                var result = await collection.UpdateOneAsync(filter, update);
+                if (result is not null && result.IsModifiedCountAvailable && result.MatchedCount > 0) return true;
+                else return false;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> UpdateGameRating(int videoGameId, string userId, GameRating gameRating)
+        {
+            try
+            {
+                var collection = _database.GetCollection<User>("users");
+                var filter = Builders<User>.Filter.Eq(x => x.AppleId, userId)
+                    & Builders<User>.Filter.ElemMatch(x => x.VideoGames, Builders<VideoGame>.Filter.Eq(x => x.Id, videoGameId));
+
+                var update = Builders<User>.Update.Set(x => x.VideoGames![-1].GameRating, gameRating);
+
+                var result = await collection.UpdateOneAsync(filter, update);
+                if (result is not null && result.IsModifiedCountAvailable && result.MatchedCount > 0) return true;
+                else return false;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
     }
 }

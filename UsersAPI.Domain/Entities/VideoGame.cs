@@ -28,6 +28,10 @@ namespace UsersAPI.Domain.Entities
         public Status Status { get; set; }
         [BsonElement("now_playing")]
         public bool NowPlaying { get; set; }
+        [BsonElement("star_rating")]
+        public double? StarRating { get; set; }
+        [BsonElement("game_rating")]
+        public GameRating? GameRating { get; set; }
         [BsonElement("added_at")]
         public DateTime AddedAt { get; set; }
         [BsonElement("updated_at")]

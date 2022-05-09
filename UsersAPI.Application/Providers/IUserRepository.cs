@@ -12,5 +12,9 @@ namespace UsersAPI.Application.Providers
         public Task<User> RetrieveAsync(string id);
         public Task<bool> InsertUpdateVideoGame(string userId, VideoGame videoGame);
         public Task<bool> DeleteVideoGame(int id, string userId);
+
+        public Task<Rating> RetrieveAverageRating(int videoGameId);
+        public Task<bool> UpdateStarRating(int videoGameId, string userId, double stars);
+        public Task<bool> UpdateGameRating(int videoGameId, string userId, GameRating gameRating);
     }
 }
