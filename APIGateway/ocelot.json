@@ -109,6 +109,22 @@
         "AllowedScopes": []
       }
     },
+    {
+      "DownstreamPathTemplate": "/api/user/videogames/trending",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "vgflow-usersapi.azurewebsites.net",
+          "Port": 443
+        }
+      ],
+      "UpstreamPathTemplate": "/videogames/trending",
+      "UpstreamHttpMethod": [ "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "AppleID",
+        "AllowedScopes": []
+      }
+    },
 
     // VideoGames API
     {

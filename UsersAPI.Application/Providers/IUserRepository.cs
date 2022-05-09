@@ -16,5 +16,7 @@ namespace UsersAPI.Application.Providers
         public Task<Rating> RetrieveAverageRating(int videoGameId);
         public Task<bool> UpdateStarRating(int videoGameId, string userId, double stars);
         public Task<bool> UpdateGameRating(int videoGameId, string userId, GameRating gameRating);
+
+        public Task<IEnumerable<TrendingVideoGame>> RetrieveTrendingVideoGames();
     }
 }

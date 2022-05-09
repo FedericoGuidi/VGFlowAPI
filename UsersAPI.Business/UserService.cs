@@ -119,9 +119,7 @@ namespace UsersAPI.Business
 
         public async Task<IEnumerable<TrendingVideoGame>> RetrieveTrendingVideoGames()
         {
-            TrendingVideoGame tvg = new();
-
-            return new List<TrendingVideoGame> { tvg };
+            return await _userRepository.RetrieveTrendingVideoGames();
         }
 
         private VideoGameCard MapFrom(VideoGame videogame)

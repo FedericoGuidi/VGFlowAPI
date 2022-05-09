@@ -83,53 +83,30 @@ namespace UsersAPI.Provider
             {
                 new BsonDocument("$unwind",
                 new BsonDocument("path", "$videogames")),
-                new BsonDocument("$match",new BsonDocument
-                    {
-                        { "videogames.id", videoGameId },
-                        { "videogames.star_rating",
-                new BsonDocument
-                        {
-                            { "$exists", true },
-                            { "$ne", BsonNull.Value }
-                        } },
-                        { "videogames.game_rating",
-                new BsonDocument
-                        {
-                            { "$exists", true },
-                            { "$ne", BsonNull.Value }
-                        } }
-                    }),
+                new BsonDocument("$match",
+                new BsonDocument("videogames.id", videoGameId)),
                 new BsonDocument("$group",
                 new BsonDocument
                     {
                         { "_id", "$videogames.id" },
                         { "star_rating",
-                new BsonDocument("$avg",
-                new BsonDocument("$sum", "$videogames.star_rating")) },
+                new BsonDocument("$avg", "$videogames.star_rating") },
                         { "gameplay",
-                new BsonDocument("$avg",
-                new BsonDocument("$sum", "$videogames.game_rating.gameplay")) },
+                new BsonDocument("$avg", "$videogames.game_rating.gameplay") },
                         { "plot",
-                new BsonDocument("$avg",
-                new BsonDocument("$sum", "$videogames.game_rating.plot")) },
+                new BsonDocument("$avg", "$videogames.game_rating.plot") },
                         { "music",
-                new BsonDocument("$avg",
-                new BsonDocument("$sum", "$videogames.game_rating.music")) },
+                new BsonDocument("$avg", "$videogames.game_rating.music") },
                         { "graphics",
-                new BsonDocument("$avg",
-                new BsonDocument("$sum", "$videogames.game_rating.graphics")) },
+                new BsonDocument("$avg", "$videogames.game_rating.graphics") },
                         { "level_design",
-                new BsonDocument("$avg",
-                new BsonDocument("$sum", "$videogames.game_rating.level_design")) },
+                new BsonDocument("$avg", "$videogames.game_rating.level_design") },
                         { "longevity",
-                new BsonDocument("$avg",
-                new BsonDocument("$sum", "$videogames.game_rating.longevity")) },
+                new BsonDocument("$avg", "$videogames.game_rating.longevity") },
                         { "ia",
-                new BsonDocument("$avg",
-                new BsonDocument("$sum", "$videogames.game_rating.ia")) },
+                new BsonDocument("$avg", "$videogames.game_rating.ia") },
                         { "physics",
-                new BsonDocument("$avg",
-                new BsonDocument("$sum", "$videogames.game_rating.physics")) }
+                new BsonDocument("$avg", "$videogames.game_rating.physics") }
                     }),
                 new BsonDocument("$project",
                 new BsonDocument
@@ -196,6 +173,91 @@ namespace UsersAPI.Provider
             {
                 return false;
             }
+        }
+
+        public async Task<IEnumerable<TrendingVideoGame>> RetrieveTrendingVideoGames()
+        {
+            PipelineDefinition<User, TrendingVideoGame> pipeline = new[]
+            {
+                new BsonDocument("$unwind",
+                new BsonDocument("path", "$videogames")),
+                new BsonDocument("$group",
+                new BsonDocument
+                    {
+                        { "_id", "$videogames.id" },
+                        { "cover",
+                new BsonDocument("$first", "$videogames.cover") },
+                        { "average_star_rating",
+                new BsonDocument("$avg", "$videogames.star_rating") },
+                        { "total_now_playing",
+                new BsonDocument("$sum",
+                new BsonDocument("$cond",
+                new BsonArray
+                                {
+                                    new BsonDocument("$eq",
+                                    new BsonArray
+                                        {
+                                            "$videogames.now_playing",
+                                            true
+                                        }),
+                                    1,
+                                    0
+                                })) },
+                        { "gameplay",
+                new BsonDocument("$avg", "$videogames.game_rating.gameplay") },
+                        { "plot",
+                new BsonDocument("$avg", "$videogames.game_rating.plot") },
+                        { "music",
+                new BsonDocument("$avg", "$videogames.game_rating.music") },
+                        { "graphics",
+                new BsonDocument("$avg", "$videogames.game_rating.graphics") },
+                        { "level_design",
+                new BsonDocument("$avg", "$videogames.game_rating.level_design") },
+                        { "longevity",
+                new BsonDocument("$avg", "$videogames.game_rating.longevity") },
+                        { "ia",
+                new BsonDocument("$avg", "$videogames.game_rating.ia") },
+                        { "physics",
+                new BsonDocument("$avg", "$videogames.game_rating.physics") }
+                    }),
+                new BsonDocument("$match",
+                new BsonDocument
+                    {
+                        { "total_now_playing",
+                new BsonDocument("$gt", 0) },
+                        { "average_star_rating",
+                new BsonDocument("$ne", BsonNull.Value) },
+                        { "gameplay",
+                new BsonDocument("$ne", BsonNull.Value) }
+                    }),
+                new BsonDocument("$project",
+                new BsonDocument
+                    {
+                        { "_id", 0 },
+                        { "id", "$_id" },
+                        { "cover", "$cover" },
+                        { "total_now_playing", "$total_now_playing" },
+                        { "average_star_rating", "$average_star_rating" },
+                        { "average_game_rating",
+                new BsonDocument
+                        {
+                            { "gameplay", "$gameplay" },
+                            { "plot", "$plot" },
+                            { "music", "$music" },
+                            { "graphics", "$graphics" },
+                            { "level_design", "$level_design" },
+                            { "longevity", "$longevity" },
+                            { "ia", "$ia" },
+                            { "physics", "$physics" }
+                        } }
+                    }),
+                new BsonDocument("$sort",
+                new BsonDocument("total_now_playing", -1)),
+                new BsonDocument("$limit", 9)
+            };
+
+            var cursor = await _database.GetCollection<User>("users").AggregateAsync(pipeline);
+            return await cursor.ToListAsync();
         }
     }
 }
