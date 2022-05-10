@@ -13,6 +13,8 @@ namespace UsersAPI.Domain.Entities
     {
         [BsonElement("id")]
         public int VideoGameId { get; set; }
+        [BsonElement("name")]
+        public string Name { get; set; } = string.Empty;
         [BsonElement("cover")]
         public string Cover { get; set; } = string.Empty;
         [BsonElement("total_now_playing")]

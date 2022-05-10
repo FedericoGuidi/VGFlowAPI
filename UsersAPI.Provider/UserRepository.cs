@@ -185,6 +185,8 @@ namespace UsersAPI.Provider
                 new BsonDocument
                     {
                         { "_id", "$videogames.id" },
+                        { "name",
+                new BsonDocument("$first", "$videogames.name") },
                         { "cover",
                 new BsonDocument("$first", "$videogames.cover") },
                         { "average_star_rating",
@@ -235,6 +237,7 @@ namespace UsersAPI.Provider
                     {
                         { "_id", 0 },
                         { "id", "$_id" },
+                        { "name", "$name" },
                         { "cover", "$cover" },
                         { "total_now_playing", "$total_now_playing" },
                         { "average_star_rating", "$average_star_rating" },
