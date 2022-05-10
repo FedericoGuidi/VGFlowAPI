@@ -49,7 +49,11 @@ namespace UsersAPI.Business
             User user = await _userRepository.RetrieveAsync(userId);
 
             Rating averageRating = await _userRepository.RetrieveAverageRating(videogameId);
-           
+            var averageGameRatingNull = averageRating.GameRating is null || averageRating.GameRating.GetType().GetProperties()
+                .Where(pi => pi.PropertyType == typeof(double?))
+                .Select(pi => (double?)pi.GetValue(averageRating.GameRating))
+                .Any(value => value is null);
+
             var videogame = user.VideoGames?.FirstOrDefault(x => x.Id == videogameId);
 
             var hours = videogame?.Hours;
@@ -68,7 +72,9 @@ namespace UsersAPI.Business
                 StarRating = starRating,
                 GameRating = gameRating,
                 AverageStarRating = averageRating?.StarRating,
-                AverageGameRating = averageRating?.GameRating,
+                AverageGameRating = !averageGameRatingNull ? averageRating?.GameRating : null,
+                StarRatingCount = averageRating?.StarRatingCount ?? 0,
+                GameRatingCount = averageRating?.GameRatingCount ?? 0
             };
             return videoGameDetails;
         }

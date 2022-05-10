@@ -48,6 +48,7 @@ namespace UsersAPI.Provider
                 {
                     videoGame.AddedAt = DateTime.Now;
                     videoGame.UpdatedAt = DateTime.Now;
+                    videoGame.GameRating = new();
 
                     var insertFilter = Builders<User>.Filter.Where(x => x.AppleId == userId);
                     var insertUpdate = Builders<User>.Update.Push("videogames", videoGame);
@@ -89,6 +90,34 @@ namespace UsersAPI.Provider
                 new BsonDocument
                     {
                         { "_id", "$videogames.id" },
+                        { "star_rating_count",
+                new BsonDocument("$sum",
+                new BsonDocument("$cond",
+                new BsonArray
+                                {
+                                    new BsonDocument("$eq",
+                                    new BsonArray
+                                        {
+                                            "$videogames.star_rating",
+                                            BsonNull.Value
+                                        }),
+                                    0,
+                                    1
+                                })) },
+                        { "game_rating_count",
+                new BsonDocument("$sum",
+                new BsonDocument("$cond",
+                new BsonArray
+                                {
+                                    new BsonDocument("$eq",
+                                    new BsonArray
+                                        {
+                                            "$videogames.game_rating",
+                                            BsonNull.Value
+                                        }),
+                                    0,
+                                    1
+                                })) },
                         { "star_rating",
                 new BsonDocument("$avg", "$videogames.star_rating") },
                         { "gameplay",
@@ -114,6 +143,7 @@ namespace UsersAPI.Provider
                         { "_id", 0 },
                         { "videogame", "$_id" },
                         { "star_rating", "$star_rating" },
+                        { "star_rating_count", "$star_rating_count" },
                         { "game_rating",
                 new BsonDocument
                         {
@@ -125,13 +155,14 @@ namespace UsersAPI.Provider
                             { "longevity", "$longevity" },
                             { "ia", "$ia" },
                             { "physics", "$physics" }
-                        } }
+                        } },
+                        { "game_rating_count", "$game_rating_count" }
                     })
             };
 
             var cursor = await _database.GetCollection<User>("users").AggregateAsync(pipeline);
             var listResult = await cursor.ToListAsync();
-            
+
             return listResult.Any() ? listResult.First() : new Rating();
         }
 

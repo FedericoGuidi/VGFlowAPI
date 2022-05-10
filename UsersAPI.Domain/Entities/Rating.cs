@@ -17,26 +17,42 @@ namespace UsersAPI.Domain.Entities
         [BsonElement("star_rating")]
         public double? StarRating { get; set; }
         [BsonElement("game_rating")]
-        public GameRating? GameRating { get; set; }
+        public GameRating GameRating { get; set; }
+        [BsonElement("star_rating_count")]
+        public int StarRatingCount { get; set; }
+        [BsonElement("game_rating_count")]
+        public int GameRatingCount { get; set; }
     }
 
     public class GameRating
     {
+        public GameRating()
+        {
+            Gameplay = 0;
+            Plot = 0;
+            Music = 0;
+            Graphics = 0;
+            LevelDesign = 0;
+            Longevity = 0;
+            IA = 0;
+            Physics = 0;
+        }
+
         [BsonElement("gameplay")]
-        public double Gameplay { get; set; }
+        public double? Gameplay { get; set; }
         [BsonElement("plot")]
-        public double Plot { get; set; }
+        public double? Plot { get; set; }
         [BsonElement("music")]
-        public double Music { get; set; }
+        public double? Music { get; set; }
         [BsonElement("graphics")]
-        public double Graphics { get; set; }
+        public double? Graphics { get; set; }
         [BsonElement("level_design")]
-        public double LevelDesign { get; set; }
+        public double? LevelDesign { get; set; }
         [BsonElement("longevity")]
-        public double Longevity { get; set; }
+        public double? Longevity { get; set; }
         [BsonElement("ia")]
-        public double IA { get; set; }
+        public double? IA { get; set; }
         [BsonElement("physics")]
-        public double Physics { get; set; }
+        public double? Physics { get; set; }
     }
 }

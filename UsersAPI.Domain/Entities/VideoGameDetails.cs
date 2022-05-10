@@ -14,7 +14,9 @@ namespace UsersAPI.Domain.Entities
         public bool Starred { get; set; }
         public double? StarRating { get; set; }
         public double? AverageStarRating { get; set; }
+        public int StarRatingCount { get; set; }
         public GameRating? GameRating { get; set; }
         public GameRating? AverageGameRating { get; set; }
+        public int GameRatingCount { get; set; }
     }
 }
