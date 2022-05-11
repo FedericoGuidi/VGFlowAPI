@@ -110,6 +110,22 @@
       }
     },
     {
+      "DownstreamPathTemplate": "/api/user/videogame/removeentry",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "vgflow-usersapi.azurewebsites.net",
+          "Port": 443
+        }
+      ],
+      "UpstreamPathTemplate": "/videogame/removeentry",
+      "UpstreamHttpMethod": [ "DELETE" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "AppleID",
+        "AllowedScopes": []
+      }
+    },
+    {
       "DownstreamPathTemplate": "/api/user/videogames/trending",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
