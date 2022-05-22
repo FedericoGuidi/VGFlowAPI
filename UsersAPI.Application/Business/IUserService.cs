@@ -11,6 +11,8 @@ namespace UsersAPI.Application.Business
     public interface IUserService
     {
         public Task<User> RetrieveAsync(string id);
+        public Task InsertOneAsync(LoginPayload payload);
+
         public Task<Profile> RetrieveProfileAsync(string id);
         public Task<VideoGameDetails> RetrieveVideoGameDetailsAsync(int videoGameId, string userId);
         public Task<bool> InsertUpdateVideoGame(BacklogEntry backlogEntry);

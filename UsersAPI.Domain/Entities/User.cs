@@ -16,6 +16,8 @@ namespace UsersAPI.Domain.Entities
         public string AppleId { get; set; } = string.Empty;
         [BsonElement("name")]
         public string Name { get; set; } = string.Empty;
+        [BsonElement("email")]
+        public string Email { get; set; } = string.Empty;
         [BsonElement("description")]
         public string Description { get; set; } = string.Empty;
         [BsonElement("social")]

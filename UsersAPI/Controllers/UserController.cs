@@ -96,9 +96,9 @@ namespace UsersAPI.Controllers
 
         [HttpDelete]
         [Route("videogame/removeentry")]
-        public async Task<ActionResult> RemoveVideoGameEntry(int id, string userId)
+        public async Task<ActionResult> RemoveVideoGameEntry(int vid, string uid)
         {
-            await _userService.DeleteVideoGame(id, userId);
+            await _userService.DeleteVideoGame(vid, uid);
             return NoContent();
         }
 
@@ -112,10 +112,14 @@ namespace UsersAPI.Controllers
 
         [HttpPost]
         [Route("login")]
-        public async Task<Token> Login(string ac)
+        public async Task<Token> Login(LoginPayload payload)
         {
+            // Se primo login, inserisco il nuovo utente nel DB
+            var existingUser = await _userService.RetrieveAsync(payload.AppleID);
+            if (existingUser is null) await _userService.InsertOneAsync(payload);
+
             var clientSecret = JWTHelper.GetAppleClientSecret(TeamID, ClientID, KeyID, SignatureKey);
-            return await JWTHelper.GenerateToken(ClientID, clientSecret, ac);
+            return await JWTHelper.GenerateToken(ClientID, clientSecret, payload.AuthorizationCode);
         }
     }
 }

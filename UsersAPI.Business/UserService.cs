@@ -18,6 +18,20 @@ namespace UsersAPI.Business
             return await _userRepository.RetrieveAsync(id);
         }
 
+        public async Task InsertOneAsync(LoginPayload payload)
+        {
+            User user = new()
+            {
+                AppleId = payload.AppleID,
+                Name = payload.FullName,
+                Email = payload.Email,
+                Social = new(),
+                VideoGames = new()
+            };
+
+            await _userRepository.InsertOneAsync(user);
+        }
+
         public async Task<Profile> RetrieveProfileAsync(string id)
         {
             User user = await _userRepository.RetrieveAsync(id);
@@ -30,10 +44,10 @@ namespace UsersAPI.Business
             Backlog backlog = new();
             backlog.TotalHours = user.VideoGames?.Sum(x => x.Hours) ?? 0;
             backlog.TotalGames = user.VideoGames?.Count ?? 0;
-            backlog.MostPlayedGenre = user.VideoGames?.SelectMany(x => x.Genres ?? new List<string>())
+            backlog.MostPlayedGenre = backlog.TotalGames > 0 ? user.VideoGames!.SelectMany(x => x.Genres ?? new List<string>())
                 .GroupBy(x => x)
                 .MaxBy(x => x.Count())
-                .First();
+                .First() : "Ancora nessun gioco!";
 
             profile.Backlog = backlog;
 

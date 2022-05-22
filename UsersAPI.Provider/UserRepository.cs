@@ -23,8 +23,14 @@ namespace UsersAPI.Provider
         public async Task<User> RetrieveAsync(string id)
         {
             var filter = Builders<User>.Filter.Eq("apple_id", id);
-            var user = await _database.GetCollection<User>("users").Find(filter).FirstAsync();
+            var user = await _database.GetCollection<User>("users").Find(filter).FirstOrDefaultAsync();
             return user;
+        }
+
+        public async Task InsertOneAsync(User user)
+        {
+            var collection = _database.GetCollection<User>("users");
+            await collection.InsertOneAsync(user);
         }
 
         public async Task<bool> InsertUpdateVideoGame(string userId, VideoGame videoGame)
