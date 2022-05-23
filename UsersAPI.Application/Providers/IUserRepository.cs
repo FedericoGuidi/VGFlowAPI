@@ -11,6 +11,7 @@ namespace UsersAPI.Application.Providers
     {
         public Task<User> RetrieveAsync(string id);
         public Task InsertOneAsync(User user);
+        public Task<bool> UpdateOneAsync(User user);
 
         public Task<bool> InsertUpdateVideoGame(string userId, VideoGame videoGame);
         public Task<bool> DeleteVideoGame(int id, string userId);

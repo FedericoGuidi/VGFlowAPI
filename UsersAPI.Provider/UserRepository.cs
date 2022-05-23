@@ -33,6 +33,28 @@ namespace UsersAPI.Provider
             await collection.InsertOneAsync(user);
         }
 
+        public async Task<bool> UpdateOneAsync(User user)
+        {
+            try
+            {
+                var collection = _database.GetCollection<User>("users");
+                var filter = Builders<User>.Filter.Eq(x => x.AppleId, user.AppleId);
+
+                var update = Builders<User>.Update.Set(x => x.Name, user.Name)
+                    .Set(x => x.Description, user.Description)
+                    .Set(x => x.Social, user.Social);
+
+                var result = await collection.UpdateOneAsync(filter, update);
+
+                if (result is not null && result.IsModifiedCountAvailable && result.MatchedCount > 0) return true;
+                return false;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
         public async Task<bool> InsertUpdateVideoGame(string userId, VideoGame videoGame)
         {
             try

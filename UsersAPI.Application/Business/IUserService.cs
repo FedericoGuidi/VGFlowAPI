@@ -12,6 +12,7 @@ namespace UsersAPI.Application.Business
     {
         public Task<User> RetrieveAsync(string id);
         public Task InsertOneAsync(LoginPayload payload);
+        public Task<bool> UpdateOneAsync(User user);
 
         public Task<Profile> RetrieveProfileAsync(string id);
         public Task<VideoGameDetails> RetrieveVideoGameDetailsAsync(int videoGameId, string userId);

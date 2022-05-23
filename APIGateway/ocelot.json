@@ -30,6 +30,22 @@
       }
     },
     {
+      "DownstreamPathTemplate": "/api/user/update",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "vgflow-usersapi.azurewebsites.net",
+          "Port": 443
+        }
+      ],
+      "UpstreamPathTemplate": "/user/update",
+      "UpstreamHttpMethod": [ "PUT" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "AppleID",
+        "AllowedScopes": []
+      }
+    },
+    {
       "DownstreamPathTemplate": "/api/user/profile",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [

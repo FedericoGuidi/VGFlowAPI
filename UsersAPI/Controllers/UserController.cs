@@ -47,11 +47,31 @@ namespace UsersAPI.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("login")]
+        public async Task<Token> Login(LoginPayload payload)
+        {
+            // Se primo login, inserisco il nuovo utente nel DB
+            var existingUser = await _userService.RetrieveAsync(payload.AppleID);
+            if (existingUser is null) await _userService.InsertOneAsync(payload);
+
+            var clientSecret = JWTHelper.GetAppleClientSecret(TeamID, ClientID, KeyID, SignatureKey);
+            return await JWTHelper.GenerateToken(ClientID, clientSecret, payload.AuthorizationCode);
+        }
+
         [HttpGet]
         public async Task<ActionResult<User>> Get(string id)
         {
             User user = await _userService.RetrieveAsync(id);
             return Ok(user);
+        }
+
+        [HttpPut]
+        [Route("update")]
+        public async Task<ActionResult> Update(User user)
+        {
+            await _userService.UpdateOneAsync(user);
+            return NoContent();
         }
 
         [HttpGet]
@@ -108,18 +128,6 @@ namespace UsersAPI.Controllers
         {
             IEnumerable<TrendingVideoGame> trendingVideoGames = await _userService.RetrieveTrendingVideoGames();
             return Ok(trendingVideoGames);
-        }
-
-        [HttpPost]
-        [Route("login")]
-        public async Task<Token> Login(LoginPayload payload)
-        {
-            // Se primo login, inserisco il nuovo utente nel DB
-            var existingUser = await _userService.RetrieveAsync(payload.AppleID);
-            if (existingUser is null) await _userService.InsertOneAsync(payload);
-
-            var clientSecret = JWTHelper.GetAppleClientSecret(TeamID, ClientID, KeyID, SignatureKey);
-            return await JWTHelper.GenerateToken(ClientID, clientSecret, payload.AuthorizationCode);
         }
     }
 }

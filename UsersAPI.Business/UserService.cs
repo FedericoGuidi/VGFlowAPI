@@ -32,6 +32,11 @@ namespace UsersAPI.Business
             await _userRepository.InsertOneAsync(user);
         }
 
+        public async Task<bool> UpdateOneAsync(User user)
+        {
+            return await _userRepository.UpdateOneAsync(user);
+        }
+
         public async Task<Profile> RetrieveProfileAsync(string id)
         {
             User user = await _userRepository.RetrieveAsync(id);
