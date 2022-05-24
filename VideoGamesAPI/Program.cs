@@ -10,7 +10,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<VideoGamesService>();
-builder.Services.AddControllers().AddJsonOptions(options => {  options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); });
+builder.Services.AddControllers().AddJsonOptions(
+    options => {  
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); 
+    });
 builder.Services.AddMemoryCache();
 
 var app = builder.Build();
