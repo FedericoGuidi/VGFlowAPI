@@ -28,7 +28,7 @@ namespace VideoGamesAPI.Business
             var response = await HttpClient.SendAsync(request);
             var jsonResponse = await response.Content.ReadAsStringAsync();
 
-            return JsonSerializer.Deserialize<List<VideoGameLite>>(jsonResponse);
+            return JsonSerializer.Deserialize<List<VideoGameLite>>(jsonResponse) ?? new();
         }
 
         public async Task<VideoGame> GetVideoGameById(int id)

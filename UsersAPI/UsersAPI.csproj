@@ -18,7 +18,6 @@
   <ItemGroup>
     <ProjectReference Include="..\UsersAPI.Application\UsersAPI.Application.csproj" />
     <ProjectReference Include="..\UsersAPI.Business\UsersAPI.Business.csproj" />
-    <ProjectReference Include="..\UsersAPI.Domain\UsersAPI.Domain.csproj" />
     <ProjectReference Include="..\UsersAPI.Provider\UsersAPI.Provider.csproj" />
   </ItemGroup>
 

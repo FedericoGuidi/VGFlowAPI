@@ -33,10 +33,9 @@ builder.Services.AddAuthentication().
        options.TokenValidationParameters =
             new TokenValidationParameters
             {
-                ValidateAudience = false,
-                ValidateIssuer = false,
-                ValidateActor = false,
-                ValidateLifetime = false,
+                ValidateAudience = true,
+                ValidateIssuer = true,
+                ValidateActor = true,
                 IssuerSigningKeys = signingKeys
             };
     });
