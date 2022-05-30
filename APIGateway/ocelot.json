@@ -185,7 +185,7 @@
         }
       ],
       "UpstreamPathTemplate": "/videogames/search",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [ "POST" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "AppleID",
         "AllowedScopes": []

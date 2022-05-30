@@ -77,7 +77,7 @@
         }
       ],
       "UpstreamPathTemplate": "/videogames/search",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [ "POST" ],
       "DangerousAcceptAnyServerCertificateValidator": true,
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "AppleID",

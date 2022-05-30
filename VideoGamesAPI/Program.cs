@@ -33,9 +33,9 @@ app.MapGet("/api/videogames/{id}", async (int id, VideoGamesService vg) =>
 })
 .WithName("GetVideoGameById");
 
-app.MapGet("/api/videogames/search", async (string search, VideoGamesService vg) =>
+app.MapPost("/api/videogames/search", async ([FromBody]Search search, VideoGamesService vg) =>
 {
-    return await vg.GetVideoGames(search);
+    return await vg.GetVideoGames(search.Value);
 })
 .WithName("SearchVideoGames");
 
@@ -46,3 +46,8 @@ app.MapGet("/api/videogames/upcoming", async (VideoGamesService vg) =>
 .WithName("UpcomingGames");
 
 app.Run();
+
+internal record Search
+{
+    public string Value { get; set; }
+}
